@@ -1,0 +1,11 @@
+#define T_eof   0
+#define T_if    1
+#define T_else  2
+#define T_main  3
+#define T_for   4
+#define T_while 5
+#define T_do    6
+#define T_FUNCTION  7
+#define T_PROGRAM  8
+#define T_space  10
+#define T_tab  9
