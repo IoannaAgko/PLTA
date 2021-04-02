@@ -23,3 +23,5 @@
 #define T_ws 22
 #define T_closepar 23
 #define T_telia 24
+#define T_else 25
+#define T_elseif 26
