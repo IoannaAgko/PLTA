@@ -1,4 +1,5 @@
 
+
 %{
 #include "lib.h"
 #include <stdio.h>
@@ -25,7 +26,9 @@ int			[1-9][0-9]*|0
 
 
 ^("PROGRAM")      {printtokens(T_PROGRAM); return T_PROGRAM;}
-"IF"           {printtokens(T_if); return T_if;}
+"IF"          {printtokens(T_if); return T_if;}
+"else"        {printtokens(T_else); return T_else;}
+"elseif"      {printtokens(T_elseif); return T_elseif;}
 "+"	{ return '+'; }
 "*"	{ return '*'; }
 "\n"	{ return '\n'; }
@@ -69,4 +72,5 @@ int main(int argc, char *argv[]) {
 }
 
 void printtokens(int tokennum){
-  printf("found token \'%s\' (%d) at line %d \n",yytext,tokennum,yylineno
+  printf("found token \'%s\' (%d) at line %d \n",yytext,tokennum,yylineno);
+}
