@@ -9,3 +9,17 @@
 #define T_PROGRAM  8
 #define T_space  10
 #define T_tab  9
+#define T_semicolon  11
+#define T_colon 12
+#define T_komma 13
+#define T_openagk  14
+#define T_closeagk  15
+#define T_openpar  16
+#define T_closepar 17
+#define T_boolean 18
+#define T_string 19
+#define T_int 20
+#define T_n 21
+#define T_ws 22
+#define T_closepar 23
+#define T_telia 24
