@@ -41,3 +41,6 @@
 #define T_power 306
 #define T_pin 307
 #define T_letters 308
+#define T_open 309
+
+#define T_close 310
