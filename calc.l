@@ -1,3 +1,4 @@
+
 %{
 #include "lib.h"
 #include <stdio.h>
@@ -17,6 +18,7 @@ alphanums    ([a-zA-Z]+)[0-9]+
 boolean		("true"|"false")
 ws 			[\t\n\r]
 string		(\\.|[^\"])*
+
 
 
 %%
@@ -51,6 +53,8 @@ string		(\\.|[^\"])*
 ","				    {printtokens(T_komma); return T_komma;}
 "{"					  {printtokens(T_openagk); return T_openagk;}
 "}"					  {printtokens(T_closeagk); return T_closeagk;}
+"("           {printtokens(T_open); return T_open;}
+")"           {printtokens(T_close); return T_close;}
 "["					  {printtokens(T_openpar); return T_openpar;}
 "]"					  {printtokens(T_closepar); return T_closepar;}
 {boolean} 		{printtokens(T_boolean); return T_boolean;}
@@ -59,6 +63,7 @@ string		(\\.|[^\"])*
 {digit}*      {printtokens(T_intnum ); return T_intnum ;}
 {alphanums}  {printtokens(T_word ); return T_word ;}
 {alphanums}"["{digit}+"]"|{letters}+"["{digit}+"]" {printtokens(T_pin); return T_pin;}
+
 
 {ws}				{printtokens(T_ws); return T_ws;}
 
