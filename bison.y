@@ -30,19 +30,42 @@ void yyerror(const char* s);
 %start cfile 
 %token ENTITIES HASHTAGS
 %token URLS 
+%token lineComment
+%token blockComment
+%token string
+%token charLit
+%token preDir
+%token reserved
+%token dt
+%token number
+%token letter
+%token id
+%token sumvola
+%token isotites
+%token logicalsymbol
+%token bitwiseOp
+%token arithematic
+%token assignment
+%token rLP
+%token rRP
+%token cLP
+%token cRP
+%token sLP
+%token sRP
+%token delim
+%token bitShift
+%token ws
+%token arithematic
+%token reserved
+%token assignment
+%token digits
+%token <string> ID
+%left int charLit 
+%left id if else for continue break return delete 
+
 
 %%
-//arxi Cfile BNF
-cfile: openpar {printf("{\n");} ruleRESTART closepar {printf("}\n");};
 
-//BNF GIA ;,[ ] : ...: 
-
-ENTITIES {printf("\t\"entities\"");} COLON {printf(":\n\t");} openpar {printf("{\n");} kanonas closepar {printf("\n\t}\n");} 
-
-kanonas: komma {printf(",\n");} kanonas 
-|HASHTAGS {printf("\t\t\"hashtags\"");} colon {printf(":");} openagk {printf("[");} closeagk {printf("]");}
-|URLS {printf("\t\t\"urls\"");} colon {printf(":");} openagk {printf("[\n");} openpar {printf("\t\t\t{\n");} kanonas closepar {printf("\t\t\t}\n");}  closepar {printf("\t\t]");}
-|mentions{printf("\t\t\"user_mentions\"");} colon {printf(":");} openagk {printf("[");} closeagk {printf("]");};
 
 %%
 
