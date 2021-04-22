@@ -12,7 +12,6 @@ extern int line_num;
 int errorline;
 int errors;
 int errors=0;
-int pin[1048]; 
 void yyerror(const char* s);
 
 %}
