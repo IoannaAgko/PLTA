@@ -15,7 +15,7 @@ extern FILE *yyout;
 %token ; 
 %token Vars
 %token =
-%token +,-,/,*
+%token "+,-,/,*"
 %token =
 %token (
 %token )
