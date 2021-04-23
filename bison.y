@@ -43,7 +43,7 @@ extern FILE *yyout;
 
 %%
 
-arxiko programma: PROGRAM onoma swma_programmatos
+arxiko_programma: PROGRAM onoma swma_programmatos
 onoma: T_char 
 swma_programmatos:Functions  Main comments>|Main comments
 Functions: FUNCTION onoma ( P1 ) swma_Function Return find_Function
