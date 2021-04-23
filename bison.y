@@ -1,72 +1,88 @@
 %{
-#include "lib.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <math.h>
+#include <lib.h> 
 
-extern FILE *yyin;
-extern int yylex();
-extern char* yytext;
-extern int yyparse();
-extern int line_num;
-int errorline;
-int errors;
-int errors=0;
-void yyerror(const char* s);
+void yyerror(char *); 
+extern FILE *yyin;								
+extern FILE *yyout;		
+
 
 %}
 
-%error-verbose //xriazete se periptwsi xrisis ekfrasewn me perisoteres lekseis apo oso xreiazete
-%union { int num; char* string;}
-%token colon komma openagk closeagk openpar closepar 
-%token boolean
-%token string
-%token num
-%type <string> string
-%type <int> num
-%token VARS
-%token float
-%start cfile 
-%token ENTITIES HASHTAGS
-%token URLS 
-%token lineComment
-%token blockComment
-%token string
-%token charLit
-%token preDir
-%token reserved
-%token dt
-%token number
-%token letter
-%token id
-%token sumvola
-%token isotites
-%token logicalsymbol
-%token bitwiseOp
-%token arithematic
-%token assignment
-%token rLP
-%token rRP
-%token cLP
-%token cRP
-%token sLP
-%token sRP
-%token delim
-%token bitShift
-%token ws
-%token arithematic
-%token reserved
-%token assignment
-%token digits
-%token <string> ID
-%left int charLit 
-%left id if else for continue break return delete 
+%token Return 
+%token find_Function 
+%token ; 
+%token Vars
+%token =
+%token +,-,/,*
+%token =
+%token (
+%token )
+%token to 
+%token step
+%token endfor
+%token Break 
+%token while
+%token endwhile
+%token sugkritikostelestis
+%token logicop 
+%token T_FUNCTION  
+%token T_PROGRAM  
+%token T_char 
+%token %empty
+%token T_pin 
+%token T_int 
+%token T_float 
+%token T_Char
+%token Break 
+
+
+
 
 
 %%
 
+arxiko programma: PROGRAM onoma swma_programmatos
+onoma: T_char 
+swma_programmatos:Functions  Main comments>|Main comments
+Functions: FUNCTION onoma ( P1 ) swma_Function Return find_Function
+P1 : %empty | V1 P1 
+V1: tupos metavlitis (onoma|pinakas) | tupos metavlitis (onoma|pinakas) ;
+pinakas: T_pin 
+tupos_metavlitis:T_int|T_float|T_Char
+swma_Funtion:dilwsi_metavlitis entoles_programmatos | dilwsi_metavlitis | entoles_programmatos |%empty
+dilwsi metavlitis: Vars tropos_dilwsis
+tropos_dilwsis: tupos_metavlitis P2 ;
+P2: V2 | V2 P2 
+v2:(onoma|pinakas) | (onoma|pinakas) ;
+entoles_programmatos: entoles_anathesis loipes_entoles  entoles_anathesis   | loipes_entoles | %empty
+entoles_anathesis : metavliti = ekfrasi ;
+metavliti : onoma 
+ekfrasi: apli_ekfrasi| sunthethi_ekfrasi 
+apli ekfrasi:metavliti|arithmos sunartisi
+suntheti ekfrasi:( metavltii | arithmos) k
+k: Vk | Vk k
+Vk: +,-,/,* (arithmos|metavliti) s 
+s:%empty |vs s
+vs: ( (ekfrasi) )
+loipes_entoles: entoles_vrogxou entoles_elegxou
+                                                 |entoles_ektupwsis
+                                                 |entoles_vrogxou entoles_ektupwsis
+                                                 |entoles_elegxou entoles_ektupwsis
+                                                 |entoles_ektupwsis | %empty 
+                                                 
+entoles_vrogxou:for_entoles while_entoles
+for_entoles:for entoles_anathesis to (arithmos|metavliti) step arithmos entoles_programmatos L endfor
+L:%empty | Vl L
+Vl:Break
+while entoles: while ( sunthiki ) entoles_programmatos L  endwhile
+sunthiki:(metavliti|arithmos) sugkritikostelestis (metavliti|arithmos) | PN  VN
+PN: %empty  | VN PN
+VN:VZ logicop VZ
 
 %%
+
 
 
 int main (int argc, char **argv) {
