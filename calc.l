@@ -1,10 +1,15 @@
+
+
+
+
 %option yylineno
 
 %{
-#include "bison.tab.h"
+#include "calc.tab.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 
 int error_counter=0;
 void yyerror(const char* err);
@@ -22,33 +27,43 @@ intident     [1-9]
 
 alphanums    ([a-zA-Z]+)[0-9]+
 boolean		("true"|"false")
-ws 			[\t\n\r]
-string		(\\.|[^\"])*
+ws 			[ \t\n\r]
+string	\"([^\\\"]|\\.)*\"
+
 
 
 
 %%
+\/\/(.*) ;	//comments gia mia grammi
+\/\*(.*\n)*.*\*\/  ;		//comments gia multilines
+
+
+
 
 
 "PROGRAM"      {printtokens(T_PROGRAM); return T_PROGRAM;}
 "FUNCTION"    {printtokens(T_FUNCTION); return T_FUNCTION;}
+"PRINT"      {printtokens(T_PRINT); return T_PRINT;}
 "VARS"        {printtokens(T_VARS); return T_VARS;}
 "CHAR"        {printtokens(T_char); return T_char;}
 "ENDFUNCTION" {printtokens(T_end); return T_end;}
 "RETURN"      {printtokens(T_return); return T_return;}
-"STARTMAIN"    {printtokens(T_main); return T_main;}
-"ENDMAIN"      {printtokens(T_endmain); return T_endmain;}
-"IF"          {printtokens(T_if); return T_if;}
-"SWITCH"      {printtokens(T_SWITCH); return T_SWITCH;}    
+"STARTMAIN"    {printtokens(T_STARTMAIN); return T_STARTMAIN;}
+"ENDMAIN"      {printtokens(T_ENDMAIN); return T_ENDMAIN;}
+"IF"          {printtokens(T_IF); return T_IF;}
+"TYPEDEF"          {printtokens(T_TYPEDEF); return T_TYPEDEF;}
+"STRUCT"          {printtokens(T_STRUCT); return T_STRUCT;}
+"ENDSTRUCT"          {printtokens(T_ENDSTRUCT); return T_ENDSTRUCT;}
+"SWITCH"      {printtokens(T_SWITCH); return T_SWITCH;}
 "CASE"        {printtokens(T_CASE); return T_CASE;}
 "BREAK"       {printtokens(T_BREAK); return T_BREAK;}
-"WHILE"       {printtokens(T_WHILE); return T_WHILE;}      
+"WHILE"       {printtokens(T_WHILE); return T_WHILE;}
 "INT"         {printtokens(T_int); return T_int;}
 "FLOAT"      {printtokens(T_float); return T_float;}
-"ELSE"        {printtokens(T_else); return T_else;}
-"ELSEIF"      {printtokens(T_elseif); return T_elseif;}
-"FOR"         {printtokens(T_for); return T_for;}
-"=="|"!="	    {printtokens(T_equop); return T_equop;}       
+"ELSE"        {printtokens(T_ELSE); return T_ELSE;}
+"ELSEIF"      {printtokens(T_ELSEIF); return T_ELSEIF;}
+"FOR"         {printtokens(T_FOR); return T_FOR;}
+"=="|"!="	    {printtokens(T_equop); return T_equop;}
 ">"|"<"|">="|"<=" {printtokens(T_relop); return T_relop;}
 "+"|"-"       {printtokens(T_adop); return T_adop;}
 "*"|"/"|"%"|"^"  {printtokens(T_mulop); return T_mulop;}
@@ -68,12 +83,20 @@ string		(\\.|[^\"])*
 "STEP"        {printtokens(T_STEP); return T_STEP;}
 "TO"           {printtokens(T_TO); return T_TO;}
 "ENDFOR"       {printtokens(T_ENDFOR); return T_ENDFOR;}
+"ENDWHILE"      {printtokens(T_ENDWHILE); return T_ENDWHILE;}
+"ENDSWITCH"      {printtokens(T_ENDSWITCH); return T_ENDSWITCH;}
+"ENDIF"      {printtokens(T_ENDIF); return T_ENDIF;}
+"THEN"      {printtokens(T_THEN); return T_THEN;}
+"DEFAULT"      {printtokens(T_DEFAULT); return T_DEFAULT;}
 {boolean} 		{printtokens(T_boolean); return T_boolean;}
 {digit}+"."{digit}+  {printtokens(T_floatident); return T_floatident;}
-{intident}+|0     {printtokens(T_intident ); return T_intident ;}
+{intident}{digit}*|0     {printtokens(T_intident ); return T_intident ;}
 {alphanums}|{letters}+  {printtokens(T_charident ); return T_charident ;}
 {alphanums}"["{digit}+"]"|{letters}+"["{digit}+"]" {printtokens(T_pin); return T_pin;}
+{string}  {printtokens(T_string ); return T_string ;}
 
+
+[ \t\n]                                ;
 
 {ws}				{     }
 .           {yyerror("unrecognized character");}
@@ -96,6 +119,5 @@ void yyerror(const char* err){
   if(error_counter==10){
     printf("found max errors");
   }
-  
-}
 
+}
