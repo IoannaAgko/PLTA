@@ -1,12 +1,25 @@
 PROGRAM giorgos5
 FUNCTION giorgos(INT k,INT z)
-VARS
+VARS /* asfsfsfsf
+asfasfsaf */
 CHAR var1,var2,var3,var[10];
 var1=2;
 var2=4;
 var[10]=5;
-var1=var2+5+5+2;
+var1=var2+5*2+5/3;
+IF(x<5 && y>10 || x<10 && y>15)
+THEN
+x=5;
+PRINT("panagiwthsiwanna",var2);
+WHILE(x<5 && y>5 || z<4)
+IF(x<4)THEN
+x=4;
 
+x=5;
+PRINT("SKATA");
+BREAK
+ENDIF
+ENDWHILE
+ENDIF
 RETURN var1
-
- ENDFUNCTION
+ENDFUNCTION
