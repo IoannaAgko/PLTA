@@ -1,0 +1,41 @@
+PROGRAM giorgos5
+STRUCT IOANNA
+
+VARS /* asfsfsfsf
+asfasfsaf */
+CHAR var1,var2,var3,var[10];
+ENDSTRUCT
+
+STARTMAIN
+IF(x<5 && y>10 || x<10 && y>15)
+THEN
+x=5;
+ELSEIF
+x=4;
+ELSEIF
+x=3;
+ELSE 
+x=2;
+PRINT("panagiwthsiwanna",var2);
+
+WHILE(x<5 && y>5 || z<4)
+IF(x<4)THEN
+x=4;
+
+ENDIF
+ENDWHILE
+ENDIF
+
+SWITCH (mple)
+CASE(2):
+ x=5;
+BREAK;
+CASE(3):
+PRINT("SKATA");
+BREAK;
+DEFAULT:
+y=2;
+
+ENDSWITCH
+
+ENDMAIN
