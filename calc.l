@@ -19,7 +19,7 @@ void printtokens(int tokenum);
 %option noyywrap
 %option yylineno
 
-
+%x C_COMMENT 
 
 letters [a-zA-z]
 digit        [0-9]
@@ -34,12 +34,6 @@ string	\"([^\\\"]|\\.)*\"
 
 
 %%
-\/\/(.*) ;	//comments gia mia grammi
-\/\*(.*\n)*.*\*\/  ;		//comments gia multilines
-
-
-
-
 
 "PROGRAM"      {printtokens(T_PROGRAM); return T_PROGRAM;}
 "FUNCTION"    {printtokens(T_FUNCTION); return T_FUNCTION;}
@@ -94,7 +88,10 @@ string	\"([^\\\"]|\\.)*\"
 {alphanums}|{letters}+  {printtokens(T_charident ); return T_charident ;}
 {alphanums}"["{digit}+"]"|{letters}+"["{digit}+"]" {printtokens(T_pin); return T_pin;}
 {string}  {printtokens(T_string ); return T_string ;}
-
+"/*"            { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/" { BEGIN(INITIAL); }
+<C_COMMENT>.    { }
+[%].*
 
 [ \t\n]                                ;
 
