@@ -29,8 +29,7 @@ alphanums    ([a-zA-Z]+)[0-9]+
 boolean		("true"|"false")
 ws 			[ \t\n\r]
 string	\"([^\\\"]|\\.)*\"
-
-
+floatn   [+-]?([0-9]*[.])?[0-9]+
 
 
 %%
@@ -83,8 +82,8 @@ string	\"([^\\\"]|\\.)*\"
 "THEN"      {printtokens(T_THEN); return T_THEN;}
 "DEFAULT"      {printtokens(T_DEFAULT); return T_DEFAULT;}
 {boolean} 		{printtokens(T_boolean); return T_boolean;}
-{digit}+"."{digit}+  {printtokens(T_floatident); return T_floatident;}
-{intident}{digit}*|0     {printtokens(T_intident ); return T_intident ;}
+{floatn}               {printtokens(T_floatident); return T_floatident;}
+{intident}*{digit}*|0     {printtokens(T_intident ); return T_intident ;}
 {alphanums}|{letters}+  {printtokens(T_charident ); return T_charident ;}
 {alphanums}"["{digit}+"]"|{letters}+"["{digit}+"]" {printtokens(T_pin); return T_pin;}
 {string}  {printtokens(T_string ); return T_string ;}
@@ -93,7 +92,6 @@ string	\"([^\\\"]|\\.)*\"
 <C_COMMENT>.    { }
 [%].*
 
-[ \t\n]                                ;
 
 {ws}				{     }
 .           {yyerror("unrecognized character");}
