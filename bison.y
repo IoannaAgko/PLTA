@@ -1,5 +1,4 @@
 
-
 %{
 #include <stdio.h>
 #include <math.h>
@@ -89,7 +88,6 @@ Struct : T_STRUCT name {printf("\n");} variable_declaration T_ENDSTRUCT
   |T_TYPEDEF T_STRUCT name {printf("\n");} variable_declaration {printf("\n");} name T_ENDSTRUCT
   ;
 
-
 body_program : Struct Functions  Main_function
    | Struct Main_function
    | Main_function 
@@ -134,31 +132,31 @@ V2 : d
 G  : %empty
    ;
 
-program_commands : entoles_anathesis loipes_entoles
-                     |entoles_anathesis
-                     | loipes_entoles
+program_commands : assign_commands extra_commands
+                     | assign_commands
+                     | extra_commands
                      | %empty
                      ;
 
-entoles_anathesis : cock ;
+assign_commands : comm ;
 
-cock: vcock|vcock cock ;
+comm: variablecomm | variablecomm comm ;
 
-vcock: variable T_ASSIGN expression T_semicolon ;
+variablecomm: variable T_ASSIGN expression T_semicolon ;
 
 variable : d ;
 
 Main_function: T_STARTMAIN variable_declaration program_commands T_ENDMAIN
- |  T_STARTMAIN program_commands T_ENDMAIN
- ;
+             |  T_STARTMAIN program_commands T_ENDMAIN
+             ;
 
 expression : simple_expression
-        | complex_expression
-        ;
+           | complex_expression
+           ;
 
 simple_expression : variable
                   | number
-                // | sunartisi
+                // | function 
                    ;
 
 number : T_intident
@@ -182,13 +180,13 @@ Vk:  T_adop A
 
 
 
-loipes_entoles : H /* entoles_vroxou entoles_elegxou entoles_ekt
-               | entoles_vroxou entoles_ekt
-               | entoles_elegxou entoles_ekt
-               | entoles_vroxou  entoles_elegxou
-               | entoles_ekt
-               | entoles_vroxou
-               | entoles_elegxou
+extra_commands : H /* loop_commands control_commands print_command
+               | loop_commands print_command
+               |  control_commands print_command
+               | loop_commands  control_commands
+               | print_command
+               | loop_commands
+               | control_commands
                | %empty
                ;  */
 
@@ -197,76 +195,77 @@ H : Q
   |Q H 
   ;
 
-Q : entoles_vroxou entoles_elegxou print
-               | entoles_vroxou print
-               | entoles_elegxou print
-               | entoles_vroxou  entoles_elegxou
-               | print
-               | entoles_vroxou
-               | entoles_elegxou
-               //| %empty  ;//
+Q : loop_commands control_commands print_command
+               | loop_commands print_command
+               | control_commands print_command
+               | loop_commands  control_commands
+               | print_command
+               | loop_commands
+               | control_commands
+               ;
 
 
 
 
 
 
-entoles_vroxou : for
+loop_commands : for
                 | while
                 ;
 
-for : T_FOR counter T_colon T_ASSIGN noumero T_TO giwta T_STEP noumero {printf("\n");} program_commands L T_ENDFOR ;
+for : T_FOR counter T_colon T_ASSIGN noumero T_TO type T_STEP noumero {printf("\n");} program_commands L T_ENDFOR ;
 
-giwta :T_intident | T_charident ;
+type :T_intident 
+     | T_charident ;
 
 noumero : T_intident;
 
 counter : variable ;
 
-while : T_WHILE T_open synthiki T_close {printf("\n");} program_commands L T_ENDWHILE ;
+while : T_WHILE T_open condition T_close {printf("\n");} program_commands L T_ENDWHILE ;
 
 
-//telestes: telestes_sygkrisis
- | telestes_logikis
- ;//
-
-telestes_sygkrisis: T_relop
+comparison_operator: T_relop
  | T_equop
  ;
 
-telestes_logikis: T_ANDOP
+logic_operators: T_ANDOP
  | T_OROP
  ; 
 
 L: %empty
- | break L
+ | break_command L
  ;
 
-break : T_BREAK T_semicolon ;
+break_command : T_BREAK T_semicolon ;
 
-print : T_PRINT T_open T_string X T_close T_semicolon ;
+print_command : T_PRINT T_open T_string X T_close T_semicolon ;
 
-X: %empty | joe X  ;
+X : %empty 
+  | F X  ;
 
-joe:   T_komma d  ;
+F :   T_komma d  ;
 
 
-entoles_elegxou: if
-               | switch
-               | if switch
-               ;
+control_commands: if
+                | switch
+                | if switch
+                ;
 
-if : T_IF T_open synthiki T_close T_THEN {printf("\n");} program_commands elseif else L T_ENDIF ;
+if : T_IF T_open condition T_close T_THEN {printf("\n");} program_commands elseif else L T_ENDIF ;
 
-synthiki: P 
-        | T   ;
+condition : P 
+          | T  
+		  ;
 	     
- P: A telestes_sygkrisis A ;
+ P: A comparison_operator A ;
+ 
  T: %empty 
   | J T
   ;
- J: P telestes_logikis P 
-  | telestes_logikis P
+
+ J: P logic_operators P 
+  | logic_operators P
   ;
 
 
