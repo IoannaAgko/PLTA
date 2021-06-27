@@ -48,7 +48,7 @@ extern int yylex();
 %token T_NOT "!"
 %token T_adop  "+ or -"
 %token T_equop " == or != "
-%token T_end "ENDFUNCTION"
+%token T_end "END_FUNCTION"
 %token T_mulop "* or / or  % or ^"
 %token T_char "CHAR"
 %token T_ENDMAIN "ENDMAIN"
@@ -100,11 +100,12 @@ P1 : %empty
    ;
 
 V1 : type_variable d
-   | type_variable d T_komma
+   | type_variable d T_komma V1
    ;
 
-d  : name| table;
-
+d  : name
+   | table
+   ;
 
 table :T_pin ;
 
@@ -134,61 +135,55 @@ G  : %empty
 
 program_commands : assign_commands extra_commands
                      | assign_commands
+					 | assign_commands program_commands
                      | extra_commands
                      | %empty
                      ;
 
-assign_commands : comm ;
 
-comm: variablecomm | variablecomm comm ;
+assign_commands: variable T_ASSIGN expression T_semicolon ;
 
-variablecomm: variable T_ASSIGN expression T_semicolon ;
+expression:  oros
+		  | function 
+		  ;
 
+function: name T_open orisma T_close  ;
+
+orisma: variable
+      | variable T_komma orisma
+	  ; 
+
+//parenthesi: T_open A T_close ;
+
+oros: A
+	| A telestes A oros
+	| A telestes parenthesi oros
+	;
+	
+parenthesi: T_open A T_close 
+          | T_open A T_close parenthesi ;
+	
 variable : d ;
 
+A: variable
+  | variable telestes A
+  | number 
+  | number telestes A
+  ;
+  
+ telestes: T_adop
+         | T_mulop
+		 ;
+		 
+number : T_intident
+       | T_floatident
+       ; 
+	   
 Main_function: T_STARTMAIN variable_declaration program_commands T_ENDMAIN
              |  T_STARTMAIN program_commands T_ENDMAIN
              ;
 
-expression : simple_expression
-           | complex_expression
-           ;
-
-simple_expression : variable
-                  | number
-                // | function 
-                   ;
-
-number : T_intident
-       | T_floatident
-       ;
-
-A: variable
-  | number
-  ;
-
-complex_expression :  A  k ;
-
-k : Vk
-  | Vk k
-  ;
-
-Vk:  T_adop A
-  |  T_mulop A
-  ;
-
-
-
-
-extra_commands : H /* loop_commands control_commands print_command
-               | loop_commands print_command
-               |  control_commands print_command
-               | loop_commands  control_commands
-               | print_command
-               | loop_commands
-               | control_commands
-               | %empty
-               ;  */
+extra_commands : H ;
 
 
 H : Q 
@@ -205,24 +200,20 @@ Q : loop_commands control_commands print_command
                ;
 
 
-
-
-
-
-loop_commands : for
-                | while
+loop_commands : For_command
+                | While_command
                 ;
 
-for : T_FOR counter T_colon T_ASSIGN noumero T_TO type T_STEP noumero {printf("\n");} program_commands L T_ENDFOR ;
+For_command : T_FOR counter T_colon T_ASSIGN number T_TO number T_STEP number {printf("\n");} program_commands L T_ENDFOR ;
 
-type :T_intident 
-     | T_charident ;
+//type :T_intident 
+     | T_charident ;//
 
-noumero : T_intident;
+
 
 counter : variable ;
 
-while : T_WHILE T_open condition T_close {printf("\n");} program_commands L T_ENDWHILE ;
+While_command : T_WHILE T_open condition T_close {printf("\n");} program_commands L T_ENDWHILE ;
 
 
 comparison_operator: T_relop
@@ -247,12 +238,12 @@ X : %empty
 F :   T_komma d  ;
 
 
-control_commands: if
-                | switch
-                | if switch
+control_commands: If_command
+                | Switch_command
+                | If_command Switch_command
                 ;
 
-if : T_IF T_open condition T_close T_THEN {printf("\n");} program_commands elseif else L T_ENDIF ;
+If_command : T_IF T_open condition T_close T_THEN {printf("\n");} program_commands elseif else L T_ENDIF ;
 
 condition : P 
           | T  
@@ -270,19 +261,18 @@ condition : P
 
 
 elseif : %empty                 
- //| T_ELSEIF  program_commands//
       | T_ELSEIF  program_commands elseif
       ;
 
- else : %empty
+else : %empty
       | T_ELSE program_commands
       ;
 
- switch : T_SWITCH  T_open expression T_close {printf("\n");} case  T_ENDSWITCH ;
+Switch_command : T_SWITCH  T_open expression T_close {printf("\n");} case  T_ENDSWITCH ;
 
 case : M L
      | M L case
-     | M L default 
+     | M L default L
      ;
 
 M : T_CASE T_open expression T_close T_colon {printf("\n");} program_commands ;
